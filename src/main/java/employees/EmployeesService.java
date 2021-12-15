@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -62,7 +61,14 @@ public class EmployeesService {
 		var employee = employees.stream()
 				.filter(e -> id == e.getId())
 				.findFirst()
-				.orElseThrow(() ->new EmployeesNotFoundException(id));
-employees.remove(employee);
+				.orElseThrow(() -> new EmployeesNotFoundException(id));
+		employees.remove(employee);
 	}
+
+	public void deleteAllEmployees() {
+		idGenerator = new AtomicLong();
+		employees.clear();
+	}
+
+
 }

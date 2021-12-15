@@ -3,6 +3,7 @@ package employees;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class EmployeesControllerWebMvcIT {
 						new EmployeeDto(1l, "Béla"),
 						new EmployeeDto(2l, "Zoli")));
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees"))
-				.andDo(MockMvcResultHandlers.print())
+				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].name",equalTo("Béla")));
 
