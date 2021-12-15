@@ -69,19 +69,6 @@ public class EmployeesController {
 		employeesService.deleteEmployee(id);
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ResponseEntity<Problem> handleNotFound(IllegalArgumentException e) {
-		var problem = Problem.builder()
-				.withType(URI.create("employees/not-found"))
-				.withTitle("Not Found")
-				.withStatus(Status.NOT_FOUND)
-				.withDetail(e.getMessage()).build();
-		return ResponseEntity
-				.status(HttpStatus.NOT_FOUND)
-				.contentType(MediaType.APPLICATION_PROBLEM_JSON)
-				.body(problem);
-	}
 
 
 }

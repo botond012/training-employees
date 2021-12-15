@@ -39,7 +39,7 @@ public class EmployeesService {
 		return modelMapper.map(employees.stream()
 						.filter(e -> id == e.getId())
 						.findFirst()
-						.orElseThrow(() -> new IllegalArgumentException(String.format("Employee with id:%s not found", id))),
+						.orElseThrow(() -> new EmployeesNotFoundException(id)),
 				EmployeeDto.class);
 	}
 
@@ -53,7 +53,7 @@ public class EmployeesService {
 		var employee = employees.stream()
 				.filter(e -> id == e.getId())
 				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(String.format("Employee with id:%s not found", id)));
+				.orElseThrow(() -> new EmployeesNotFoundException(id));
 		employee.setName(command.getName());
 		return modelMapper.map(employee, EmployeeDto.class);
 	}
@@ -62,7 +62,7 @@ public class EmployeesService {
 		var employee = employees.stream()
 				.filter(e -> id == e.getId())
 				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(String.format("Employee with id:%s not found", id)));
+				.orElseThrow(() ->new EmployeesNotFoundException(id));
 employees.remove(employee);
 	}
 }
