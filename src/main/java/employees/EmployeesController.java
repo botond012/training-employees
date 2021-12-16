@@ -36,8 +36,8 @@ public class EmployeesController {
 
 
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-	public EmployeesDto listEmployees(@RequestParam Optional<String> prefix) {
-		return new EmployeesDto(employeesService.listEmployees(prefix));
+	public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
+		return employeesService.listEmployees(prefix);
 	}
 
 	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
