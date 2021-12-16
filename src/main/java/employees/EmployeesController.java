@@ -6,9 +6,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +62,7 @@ public class EmployeesController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "creates an employee")
 	@ApiResponse(responseCode = "201", description = "employee has been created")
-	public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command) {
+	public EmployeeDto createEmployee(@Valid @RequestBody CreateEmployeeCommand command) {
 		return employeesService.createEmployee(command);
 	}
 
@@ -73,6 +76,25 @@ public class EmployeesController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteEmployee(@PathVariable("id") long id) {
 		employeesService.deleteEmployee(id);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Problem> handleValidException(MethodArgumentNotValidException ex) {
+		List<Violation> violations = ex.getBindingResult().getFieldErrors().stream()
+				.map(fieldError -> new Violation(fieldError.getField(), fieldError.getDefaultMessage()))
+				.collect(Collectors.toList());
+
+		var problem = Problem.builder()
+				.withType(URI.create("employees/not-valid"))
+				.withTitle("Validation Error")
+				.withStatus(Status.BAD_REQUEST)
+				.withDetail(ex.getMessage())
+				.with("violations", violations)
+				.build();
+		return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(problem);
 	}
 
 
