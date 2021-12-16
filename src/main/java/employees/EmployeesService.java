@@ -6,68 +6,55 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@AllArgsConstructor
 public class EmployeesService {
 
 	private ModelMapper modelMapper;
-	private AtomicLong idGenerator = new AtomicLong();
-
-	public EmployeesService(ModelMapper modelMapper) {
-		this.modelMapper = modelMapper;
-	}
-
-	private List<Employee> employees = Collections.synchronizedList(new ArrayList<>(List.of(
-			new Employee(idGenerator.incrementAndGet(), "Béla"), new Employee(idGenerator.incrementAndGet(), "Lajos")
-	)));
+	private EmployeeDao employeeDao;
 
 
 	public List<EmployeeDto> listEmployees(Optional<String> prefix) {
 		var targetListType = new TypeToken<List<EmployeeDto>>() {
 		}.getType();
-		var filteredEmployees = employees.stream()
+		var filteredEmployees = employeeDao.findALL().stream()
 				.filter(employee -> prefix.isEmpty() || employee.getName().toLowerCase().startsWith(prefix.get().toLowerCase()))
 				.collect(Collectors.toList());
 		return modelMapper.map(filteredEmployees, targetListType);
 	}
 
 	public EmployeeDto listEmployeeById(long id) {
-		return modelMapper.map(employees.stream()
-						.filter(e -> id == e.getId())
-						.findFirst()
-						.orElseThrow(() -> new EmployeesNotFoundException(id)),
-				EmployeeDto.class);
+		return modelMapper.map(employeeDao.findById(id), EmployeeDto.class);
 	}
 
 	public EmployeeDto createEmployee(CreateEmployeeCommand command) {
-		var employee = new Employee(idGenerator.incrementAndGet(), command.getName());
-		employees.add(employee);
+		var employee = new Employee(command.getName());
+		employeeDao.createEmployee(employee);
+		log.info("Employee has been created");
+		log.debug(String.format("Employee has been created, with name: %s id: %s", employee.getName(), employee.getId()));
 		return modelMapper.map(employee, EmployeeDto.class);
 	}
 
 	public EmployeeDto updateEmployee(long id, UpdateEmployeeCommand command) {
-		var employee = employees.stream()
-				.filter(e -> id == e.getId())
-				.findFirst()
-				.orElseThrow(() -> new EmployeesNotFoundException(id));
-		employee.setName(command.getName());
+		var employee = new Employee(id,command.getName());
+		employeeDao.updateEmployee(employee);
 		return modelMapper.map(employee, EmployeeDto.class);
 	}
 
 	public void deleteEmployee(long id) {
-		var employee = employees.stream()
-				.filter(e -> id == e.getId())
-				.findFirst()
-				.orElseThrow(() -> new EmployeesNotFoundException(id));
-		employees.remove(employee);
+		employeeDao.deleteById(id);
 	}
 
 	public void deleteAllEmployees() {
-		idGenerator = new AtomicLong();
-		employees.clear();
+		employeeDao.deleteAll();
 	}
 
 
