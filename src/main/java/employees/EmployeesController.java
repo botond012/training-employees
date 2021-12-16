@@ -1,5 +1,8 @@
 package employees;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,7 @@ import org.zalando.problem.Status;
 
 @RestController
 @RequestMapping("/api/employees")
+@Tag(name = "operations on employee")
 public class EmployeesController {
 
 	private EmployeesService employeesService;
@@ -31,12 +35,12 @@ public class EmployeesController {
 	}
 
 
-	@GetMapping
-	public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
-		return employeesService.listEmployees(prefix);
+	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public EmployeesDto listEmployees(@RequestParam Optional<String> prefix) {
+		return new EmployeesDto(employeesService.listEmployees(prefix));
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
 		return employeesService.listEmployeeById(id);
 	}
@@ -53,6 +57,8 @@ public class EmployeesController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "creates an employee")
+	@ApiResponse(responseCode = "201", description = "employee has been created")
 	public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command) {
 		return employeesService.createEmployee(command);
 	}
@@ -68,7 +74,6 @@ public class EmployeesController {
 	public void deleteEmployee(@PathVariable("id") long id) {
 		employeesService.deleteEmployee(id);
 	}
-
 
 
 }

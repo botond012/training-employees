@@ -1,5 +1,7 @@
 package employees;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @XmlRootElement
-public class EmployeeDto {
-	private long Id;
-	private String name;
+public class EmployeesDto {
+
+	private List<EmployeeDto> employeeDtos = new ArrayList<>();
 }
