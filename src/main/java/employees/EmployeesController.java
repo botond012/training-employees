@@ -78,24 +78,6 @@ public class EmployeesController {
 		employeesService.deleteEmployee(id);
 	}
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Problem> handleValidException(MethodArgumentNotValidException ex) {
-		List<Violation> violations = ex.getBindingResult().getFieldErrors().stream()
-				.map(fieldError -> new Violation(fieldError.getField(), fieldError.getDefaultMessage()))
-				.collect(Collectors.toList());
-
-		var problem = Problem.builder()
-				.withType(URI.create("employees/not-valid"))
-				.withTitle("Validation Error")
-				.withStatus(Status.BAD_REQUEST)
-				.withDetail(ex.getMessage())
-				.with("violations", violations)
-				.build();
-		return ResponseEntity
-				.status(HttpStatus.BAD_REQUEST)
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(problem);
-	}
 
 
 }

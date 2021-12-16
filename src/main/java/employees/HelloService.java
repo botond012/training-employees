@@ -1,12 +1,20 @@
 package employees;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
+@EnableConfigurationProperties(value = HelloProperties.class)
 public class HelloService {
 
-	public String sayHello(){
-		return "hello from serviceas2123123 " + LocalDateTime.now();
+	private HelloProperties helloProperties;
+
+
+	public String sayHello() {
+		return helloProperties.getMessage() + LocalDateTime.now();
 	}
 }

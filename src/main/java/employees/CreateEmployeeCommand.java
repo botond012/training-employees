@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateEmployeeCommand {
 	@Schema(description = "name of the employee", example = "Béla")
-	@NotBlank(message = "Can not be blank")
+	@Name(message = "Name cannot be empty, should start with Capital letter, and the length of the name should be [3-10]", maxLength = 10)
 	private String name;
 }

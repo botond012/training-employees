@@ -9,7 +9,9 @@ class HelloServiceTest {
 
 	@Test
 	void sayHello() {
-		var  helloService = new HelloService();
+		var helloProperties = new HelloProperties();
+		helloProperties.setMessage("hello");
+		var  helloService = new HelloService(helloProperties);
 		var message = helloService.sayHello();
 		assertThat(message).startsWith("hello");
 	}
