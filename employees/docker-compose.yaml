@@ -17,7 +17,7 @@ services:
     restart: always
     ports:
       - '8080:8080'
-    depend_on:
+    depends_on:
       - employees-mariadb
     environment:
       SPRING_DATABASE_URL: 'jdbc:mariadb://employees-mariadb/employees'
