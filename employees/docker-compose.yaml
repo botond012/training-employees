@@ -12,7 +12,7 @@ service:
       MYSQL_PASSWORD: employees
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
 
-   employees-app:
+  employees-app:
     image: employees
     restart: always
     ports:
