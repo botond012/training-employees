@@ -1,6 +1,6 @@
 version: '3'
 
-service:
+services:
   employees-mariadb:
     image: mariadb
     restart: always
