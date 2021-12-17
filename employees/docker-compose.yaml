@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: employees
       MYSQL_USER: employees
       MYSQL_PASSWORD: employees
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
   employees-app:
     image: employees
