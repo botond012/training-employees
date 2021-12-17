@@ -13,19 +13,17 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.context.jdbc.Sql;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Sql(statements = "delete from employees")
 public class EmployeesControllerRestTemplateT {
 	@Autowired
 	TestRestTemplate testRestTemplate;
 
-	@Autowired
-	EmployeesService employeesService;
-
 	@RepeatedTest(2)
 	void testListEmployees() throws Exception {
-		employeesService.deleteAllEmployees();
 		var employeeDto =
 				testRestTemplate.postForObject("/api/employees", new CreateEmployeeCommand("Béla"), EmployeeDto.class);
 		assertEquals("Béla", employeeDto.getName());
