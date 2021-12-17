@@ -3,17 +3,14 @@ package employees;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
 
 @RestController
 @RequestMapping("/api/employees")
 @Tag(name = "operations on employee")
+@Slf4j
 public class EmployeesController {
 
 	private EmployeesService employeesService;
@@ -39,7 +35,8 @@ public class EmployeesController {
 
 
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-	public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
+	public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix, Principal principal) {
+		log.info("Logger user is: " + principal.getName());
 		return employeesService.listEmployees(prefix);
 	}
 
@@ -77,7 +74,6 @@ public class EmployeesController {
 	public void deleteEmployee(@PathVariable("id") long id) {
 		employeesService.deleteEmployee(id);
 	}
-
 
 
 }
