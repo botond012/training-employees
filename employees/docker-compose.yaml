@@ -21,4 +21,4 @@ services:
       - employees-mariadb
     environment:
       SPRING_DATASOURCE_URL: 'jdbc:mariadb://employees-mariadb/employees'
-    entrypoint: ['./wait-for-it.sh','-t','120', 'employees-mariadb:3308', '--', 'java', 'org.springframework.boot.loader.JarLauncher' ]
+    entrypoint: ['./wait-for-it.sh','-t','120', 'employees-mariadb:3306', '--', 'java', 'org.springframework.boot.loader.JarLauncher' ]
