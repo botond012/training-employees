@@ -13,7 +13,7 @@ public class AddressesGateway {
 	private final RestTemplate restTemplate;
 
 	public AddressDto findAddressByName(String name){
-		return restTemplate.getForObject("http://192.168.126.129:8082/api/addresses?name={name}", AddressDto.class, name);
+		return restTemplate.getForObject("http://localhost:8082/api/addresses?name={name}", AddressDto.class, name);
 	}
 
 }
