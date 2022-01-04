@@ -45,6 +45,11 @@ public class EmployeesController {
 		return employeesService.listEmployeeById(id);
 	}
 
+	@GetMapping(value = "/{id}/address", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public AddressDto findAddressById(@PathVariable("id") long id) {
+		return employeesService.findAddressById(id);
+	}
+
 	//	@GetMapping("/{id}")
 	//	public ResponseEntity findEmployeeById(@PathVariable("id") long id) {
 	//		try {
